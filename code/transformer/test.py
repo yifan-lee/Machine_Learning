@@ -163,3 +163,6 @@ for i in range(input_length, max_length):
 print("Predicted Tokens:\n")
 for id in predicted_ids:
     print("\t",id_to_token[id.item()])
+    
+    
+## Just for testing
