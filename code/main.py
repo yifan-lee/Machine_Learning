@@ -9,7 +9,7 @@ from torch.optim import SGD # stochastic gradient descent
 
 
 
-from basic_NN import BasicNN, BasicNN_baseline
+from basic_NN import BasicNN_baseline, BasicNN, SimplifiedNN, BetterNN
 
 
 x_train = torch.linspace(0, 1, steps=100)
@@ -59,5 +59,62 @@ lossTest = criterion(y_test_pred, y_test)
 print(f"MSE (Train) for baseline NN model is {loss.item():.4f}")
 print(f"MSE (Test) for baseline NN model is {lossTest.item():.4f}")
 
+# print("== BasicNN 参数 ==")
+# for name, param in model.named_parameters():
+#     print(f"{name}: {param.data}")
+
+### SimplifiedNN
+
+
+model = SimplifiedNN()
+criterion = nn.MSELoss()
+optimizer = SGD(model.parameters(), lr=0.1)
+
+
+n_epochs = 1000
+loss_history = []
+
+for epoch in range(n_epochs):
+    # forward pass
+    y_pred = model(x_train).view(-1)
+    loss = criterion(y_pred, y_train)
+    loss_history.append(loss.item())
+    
+    # backward pass
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+
+y_test_pred = model(x_test).view(-1)
+lossTest = criterion(y_test_pred, y_test)
+print(f"MSE (Train) for Simplified NN model is {loss.item():.4f}")
+print(f"MSE (Test) for Simplified NN model is {lossTest.item():.4f}")
+
+### BetterNN
+
+
+model = BetterNN()
+criterion = nn.MSELoss()
+optimizer = SGD(model.parameters(), lr=0.1)
+
+
+n_epochs = 1000
+loss_history = []
+
+for epoch in range(n_epochs):
+    # forward pass
+    y_pred = model(x_train).view(-1)
+    loss = criterion(y_pred, y_train)
+    loss_history.append(loss.item())
+    
+    # backward pass
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+
+y_test_pred = model(x_test).view(-1)
+lossTest = criterion(y_test_pred, y_test)
+print(f"MSE (Train) for Better NN model is {loss.item():.4f}")
+print(f"MSE (Test) for Better NN model is {lossTest.item():.4f}")
 
 print('Success!')
