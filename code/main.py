@@ -4,9 +4,8 @@ import pandas as pd
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F # activation function ReLU
-from torch.optim import SGD # stochastic gradient descent
-
+import torch.nn.functional as F  # activation function ReLU
+from torch.optim import SGD  # stochastic gradient descent
 
 
 from basic_NN import BasicNN_baseline, BasicNN, SimplifiedNN, BetterNN
@@ -28,7 +27,7 @@ model = BasicNN_baseline()
 output_values = model(x_test)
 
 testLoss = F.mse_loss(output_values, y_test)
-print(f'MSE for baseline NN model is {testLoss}')
+print(f"MSE for baseline NN model is {testLoss}")
 
 ### BasicNN
 
@@ -45,12 +44,12 @@ for epoch in range(n_epochs):
     y_pred = model(x_train)
     loss = criterion(y_pred, y_train)
     loss_history.append(loss.item())
-    
+
     # backward pass
     optimizer.zero_grad()
     loss.backward()
     optimizer.step()
-    
+
     # if epoch % 100 == 0:
     #     print(f"Epoch {epoch}: Loss = {loss.item():.4f}")
 
@@ -79,7 +78,7 @@ for epoch in range(n_epochs):
     y_pred = model(x_train).view(-1)
     loss = criterion(y_pred, y_train)
     loss_history.append(loss.item())
-    
+
     # backward pass
     optimizer.zero_grad()
     loss.backward()
@@ -106,7 +105,7 @@ for epoch in range(n_epochs):
     y_pred = model(x_train).view(-1)
     loss = criterion(y_pred, y_train)
     loss_history.append(loss.item())
-    
+
     # backward pass
     optimizer.zero_grad()
     loss.backward()
@@ -117,4 +116,4 @@ lossTest = criterion(y_test_pred, y_test)
 print(f"MSE (Train) for Better NN model is {loss.item():.4f}")
 print(f"MSE (Test) for Better NN model is {lossTest.item():.4f}")
 
-print('Success!')
+print("Success!")
