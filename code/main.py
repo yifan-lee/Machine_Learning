@@ -9,7 +9,7 @@ from torch.optim import SGD  # stochastic gradient descent
 
 
 from basic_NN import BasicNN_baseline, BasicNN, SimplifiedNN, BetterNN, flixNN, flixNN2
-from basic_NN_2dim_inputs import SimplifiedNN_dim2
+from basic_NN_2dim_inputs import SimplifiedNN_dim2, SimplifiedNN_dim2_layer2
 
 class SimplifiedNN(nn.Module):
     def __init__(self, *args, **kwargs):
@@ -138,6 +138,11 @@ n_epochs = 1000
 ### SimplifiedNN_dim2
 
 model = SimplifiedNN_dim2(dim1=3)
+test_model(model, data, n_epochs)
+
+### SimplifiedNN_dim2_layer2
+
+model = SimplifiedNN_dim2_layer2(dim1=2, dim2=5)
 test_model(model, data, n_epochs)
 
 
