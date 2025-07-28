@@ -10,6 +10,7 @@ from torch.optim import SGD  # stochastic gradient descent
 
 from basic_NN import BasicNN_baseline, BasicNN, SimplifiedNN, BetterNN, flixNN, flixNN2
 from basic_NN_2dim_inputs import SimplifiedNN_dim2, SimplifiedNN_dim2_layer2
+from basic_NN_2dim_inputs_3dim_outputs import SimplifiedNN_dim2dim3, SimplifiedNN_dim2dim3_layer2
 
 class SimplifiedNN(nn.Module):
     def __init__(self, *args, **kwargs):
@@ -56,7 +57,27 @@ dat_2dim = {
     'y_test':y_test
 }
 
-def test_model(model, data, n_epochs):
+
+def label(x):
+    if x[0]+ x[1] > 1:
+        return 0
+    elif x[0]/3 + x[1]/2 > 0.5:
+        return 1
+    else:
+        return 2
+    
+x_train = torch.rand(1000, 2)
+y_train = torch.tensor([label(x) for x in x_train])
+x_test = torch.rand(200, 2)
+y_test = torch.tensor([label(x) for x in x_test])
+dat_2dim3dim = {
+    'x_train':x_train,
+    'y_train':y_train,
+    'x_test':x_test,
+    'y_test':y_test
+}
+
+def test_model(model, data, n_epochs, criterion=nn.MSELoss()):
     x_train = data['x_train']
     y_train = data['y_train']
     x_test = data['x_test']
@@ -84,66 +105,85 @@ def test_model(model, data, n_epochs):
     
     return 0
 
-# ## 1 dim
+model_class = 'dim2dim3'
 
-# # ### BasicNN_baseline
+## 1 dim
+if model_class == 'dim1':
+    
+    ### BasicNN_baseline
 
-# # model = BasicNN_baseline()
-# # output_values = model(x_test)
+    model = BasicNN_baseline()
+    output_values = model(x_test)
 
-# # testLoss = F.mse_loss(output_values, y_test)
-# # print(f"MSE for baseline NN model is {testLoss:.4f}")
-
-
-
-# n_epochs = 1000
-# data = dat_1dim
-
-# ### BasicNN
-
-# model = BasicNN()
-# test_model(model, data, n_epochs)
+    testLoss = F.mse_loss(output_values, y_test)
+    print(f"MSE for baseline NN model is {testLoss:.4f}")
 
 
-# ### SimplifiedNN
 
-# model = SimplifiedNN()
-# test_model(model, data, n_epochs)
+    n_epochs = 1000
+    data = dat_1dim
 
+    ### BasicNN
 
-# ### BetterNN
-
-# model = BetterNN()
-# test_model(model, data, n_epochs)
-
-# ### flixNN
-
-# model = flixNN(dim1=4,dim2=4)
-# test_model(model, data, n_epochs)
-
-# ### flixNN2
+    model = BasicNN()
+    test_model(model, data, n_epochs)
 
 
-# model = flixNN2(dim1=5)
-# test_model(model, data, n_epochs)
+    ### SimplifiedNN
+
+    model = SimplifiedNN()
+    test_model(model, data, n_epochs)
+
+
+    ### BetterNN
+
+    model = BetterNN()
+    test_model(model, data, n_epochs)
+
+    ### flixNN
+
+    model = flixNN(dim1=4,dim2=4)
+    test_model(model, data, n_epochs)
+
+    ### flixNN2
+
+
+    model = flixNN2(dim1=5)
+    test_model(model, data, n_epochs)
 
 
 
 
 ## 2 dim
 
-data = dat_2dim
-n_epochs = 1000
+if model_class == 'dim2':
+    data = dat_2dim
+    n_epochs = 1000
 
-### SimplifiedNN_dim2
+    ### SimplifiedNN_dim2
 
-model = SimplifiedNN_dim2(dim1=3)
-test_model(model, data, n_epochs)
+    model = SimplifiedNN_dim2(dim1=3)
+    test_model(model, data, n_epochs)
 
-### SimplifiedNN_dim2_layer2
+    ### SimplifiedNN_dim2_layer2
 
-model = SimplifiedNN_dim2_layer2(dim1=2, dim2=5)
-test_model(model, data, n_epochs)
+    model = SimplifiedNN_dim2_layer2(dim1=2, dim2=5)
+    test_model(model, data, n_epochs)
+
+## 2 dim 3 dim
+if model_class == 'dim2dim3':
+    data = dat_2dim3dim
+    n_epochs = 1000
+
+    ### SimplifiedNN_dim2dim3
+
+    model = SimplifiedNN_dim2dim3(dim1=3, num_classes=3)
+    test_model(model, data, n_epochs, criterion=nn.CrossEntropyLoss())
+
+    ### SimplifiedNN_dim2_layer2
+
+    model = SimplifiedNN_dim2_layer2(dim1=2, dim2=5, num_classes=3)
+    test_model(model, data, n_epochs, criterion=nn.CrossEntropyLoss())
 
 
 print("Success!")
