@@ -8,23 +8,10 @@ import torch.nn.functional as F  # activation function ReLU
 from torch.optim import SGD  # stochastic gradient descent
 
 
-from basic_NN import BasicNN_baseline, BasicNN, SimplifiedNN, BetterNN, flixNN, flixNN2
-from basic_NN_2dim_inputs import SimplifiedNN_dim2, SimplifiedNN_dim2_layer2
-from basic_NN_2dim_inputs_3dim_outputs import SimplifiedNN_dim2dim3, SimplifiedNN_dim2dim3_layer2
+from model.basic_NN import BasicNN_baseline, BasicNN, SimplifiedNN, BetterNN, flixNN, flixNN2
+from model.basic_NN_2dim_inputs import SimplifiedNN_dim2, SimplifiedNN_dim2_layer2
+from model.basic_NN_2dim_inputs_3dim_outputs import SimplifiedNN_dim2dim3, SimplifiedNN_dim2dim3_layer2
 
-class SimplifiedNN(nn.Module):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.W1 = nn.Parameter(torch.randn(1, 2))
-        self.B1 = nn.Parameter(torch.randn(2))
-        self.W2 = nn.Parameter(torch.randn(2, 1))
-        self.B2 = nn.Parameter(torch.randn(1))
-
-    def forward(self, input):
-        x = input.view(-1, 1)
-        y1 = F.relu(x @ self.W1 + self.B1)
-        output = F.relu(y1 @ self.W2 + self.B2)
-        return output
 
 
 
