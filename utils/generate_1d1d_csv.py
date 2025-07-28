@@ -3,20 +3,22 @@ import numpy as np
 import pandas as pd
 
 
-def generate_1d1d_csv(train_size=1000, test_size=200):
-    x_train = torch.linspace(0, 1, train_size)
-    y_noice = torch.randn(train_size) * 0.1
-    y_train = torch.sin(2 * np.pi * x_train) + 0.5 * torch.cos(5 * np.pi * x_train) + 0.3 * x_train**2 + y_noice
+def generate_1d1d_csv(trainSize=1000, testSize=200, seed=0):
+    torch.manual_seed(seed)
+    np.random.seed(seed)
+    xTrain = torch.linspace(0, 1, trainSize)
+    yNoice = torch.randn(trainSize) * 0.1
+    yTrain = torch.sin(2 * np.pi * xTrain) + 0.5 * torch.cos(5 * np.pi * xTrain) + 0.3 * xTrain**2 + yNoice
     
-    x_test = torch.linspace(0.05, 0.95, test_size)
-    y_noice_test = torch.randn(test_size) * 0.1
-    y_test = torch.sin(2 * np.pi * x_test) + 0.5 * torch.cos(5 * np.pi * x_test) + 0.3 * x_test**2 + y_noice_test
+    xTest = torch.linspace(0.05, 0.95, testSize)
+    yNoice_test = torch.randn(testSize) * 0.1
+    yTest = torch.sin(2 * np.pi * xTest) + 0.5 * torch.cos(5 * np.pi * xTest) + 0.3 * xTest**2 + yNoice_test
     
     return {
-        'x_train': x_train,
-        'y_train': y_train,
-        'x_test': x_test,
-        'y_test': y_test
+        'xTrain': xTrain,
+        'yTrain': yTrain,
+        'xTest': xTest,
+        'yTest': yTest
     }
     
     
