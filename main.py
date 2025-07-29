@@ -85,7 +85,7 @@ modelTrained = train(model, xTrain2d, yTrain2d, optimizer, criterion, epochs)
 loss = evaluate(model, xTest2d, yTest2d, criterion)
 print(f"MSE for baseline SimplifiedNN_dim2_layer2 model is {loss:.4f}")
 
-model = flexNN_dim2(dims=[2, 5])
+model = flexNN_dim2(dims=[5, 10, 3])
 optimizer=SGD(model.parameters(), lr=0.01)
 modelTrained = train(model, xTrain2d, yTrain2d, optimizer, criterion, epochs)
 loss = evaluate(model, xTest2d, yTest2d, criterion)
