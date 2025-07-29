@@ -28,47 +28,32 @@ yTest = torch.tensor(yTest, dtype=torch.float32)
 
 ## 1 dim
 
-### BasicNN
+epochs = 1000
+criterion=torch.nn.MSELoss()
 
 model = BasicNN()
 optimizer=SGD(model.parameters(), lr=0.01)
-criterion=torch.nn.MSELoss()
-modelTrained = train(model, xTrain, yTrain, optimizer, criterion, epochs=100)
+modelTrained = train(model, xTrain, yTrain, optimizer, criterion, epochs)
 loss = evaluate(model, xTest, yTest, criterion)
 print(f"MSE for baseline NN model is {loss:.4f}")
 
 model = SimplifiedNN()
-modelTrained = train(model, xTrain, yTrain, optimizer, criterion, epochs=100)
+optimizer=SGD(model.parameters(), lr=0.01)
+modelTrained = train(model, xTrain, yTrain, optimizer, criterion, epochs)
 loss = evaluate(model, xTest, yTest, criterion)
 print(f"MSE for baseline SimplifiedNN model is {loss:.4f}")
 
-# ## 1 dim
-# if model_class == 'dim1':
-    
-#     ### BasicNN_baseline
+model = BetterNN()
+optimizer=SGD(model.parameters(), lr=0.01)
+modelTrained = train(model, xTrain, yTrain, optimizer, criterion, epochs)
+loss = evaluate(model, xTest, yTest, criterion)
+print(f"MSE for baseline BetterNN model is {loss:.4f}")
 
-#     model = BasicNN_baseline()
-#     output_values = model(x_test)
-
-#     testLoss = F.mse_loss(output_values, y_test)
-#     print(f"MSE for baseline NN model is {testLoss:.4f}")
-
-
-
-#     n_epochs = 1000
-#     data = dat_1dim
-
-#     ### BasicNN
-
-#     model = BasicNN()
-#     test_model(model, data, n_epochs)
-
-
-#     ### SimplifiedNN
-
-#     model = SimplifiedNN()
-#     test_model(model, data, n_epochs)
-
+model = flixNN(dim1=4,dim2=4)
+optimizer=SGD(model.parameters(), lr=0.01)
+modelTrained = train(model, xTrain, yTrain, optimizer, criterion, epochs)
+loss = evaluate(model, xTest, yTest, criterion)
+print(f"MSE for baseline flixNN model is {loss:.4f}")
 
 #     ### BetterNN
 

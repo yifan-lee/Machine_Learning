@@ -1,3 +1,4 @@
+import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F  # activation function ReLU
@@ -50,7 +51,7 @@ class BasicNN(nn.Module):
         hiddenLayerNode2_0 = input * self.w10 + self.b10
         hiddenLayerNode2_1 = F.relu(hiddenLayerNode2_0)
 
-        output = F.relu(
+        output = (
             self.w01 * hiddenLayerNode1_1
             + self.w11 * hiddenLayerNode2_1
             + self.final_bias
@@ -70,28 +71,27 @@ class SimplifiedNN(nn.Module):
     def forward(self, input):
         x = input.view(-1, 1)
         y1 = F.relu(x @ self.W1 + self.B1)
-        output = F.relu(y1 @ self.W2 + self.B2)
+        output = (y1 @ self.W2 + self.B2)
         return output
-
-
-
+    
 class BetterNN(nn.Module):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.W1 = nn.Parameter(torch.randn(1, 16))
-        self.B1 = nn.Parameter(torch.randn(16))
-        self.W2 = nn.Parameter(torch.randn(16, 16))
-        self.B2 = nn.Parameter(torch.randn(16))
-        self.W3 = nn.Parameter(torch.randn(16, 1))
-        self.B3 = nn.Parameter(torch.randn(1))
+        hidden_dim = 8
+        self.W1 = nn.Parameter(torch.randn(1, hidden_dim))
+        nn.init.kaiming_uniform_(self.W1, a=math.sqrt(5))
+        self.B1 = nn.Parameter(torch.randn(hidden_dim))
+        self.W2 = nn.Parameter(torch.randn(hidden_dim, 1))
+        nn.init.kaiming_uniform_(self.W2, a=math.sqrt(5))
+        self.B2 = nn.Parameter(torch.randn(1))
 
     def forward(self, input):
         x = input.view(-1, 1)
         y1 = F.relu(x @ self.W1 + self.B1)
-        y2 = F.relu(y1 @ self.W2 + self.B2)
-        output = F.relu(y2 @ self.W3 + self.B3)
-        # output = (y2 @ self.W3 + self.B3)
+        output = (y1 @ self.W2 + self.B2)
         return output
+
+
 
 class flixNN(nn.Module):
     def __init__(self, dim1=16,dim2=16,*args, **kwargs):
@@ -107,7 +107,7 @@ class flixNN(nn.Module):
         x = input.view(-1, 1)
         y1 = F.relu(x @ self.W1 + self.B1)
         y2 = F.relu(y1 @ self.W2 + self.B2)
-        output = F.relu(y2 @ self.W3 + self.B3)
+        output = (y2 @ self.W3 + self.B3)
         # output = (y2 @ self.W3 + self.B3)
         return output
     
@@ -122,7 +122,7 @@ class flixNN2(nn.Module):
     def forward(self, input):
         x = input.view(-1, 1)
         y1 = F.relu(x @ self.W1 + self.B1)
-        output = F.relu(y1 @ self.W3 + self.B3)
+        output = (y1 @ self.W3 + self.B3)
         return output
     
     

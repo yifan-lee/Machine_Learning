@@ -11,7 +11,9 @@ from generate_ndnc_csv import generate_ndnc_csv
 
 
 if __name__ == "__main__":
-    simulationData = generate_1d1d_csv(trainSize=1000, testSize=200, seed=0)
+    trainSize = 10000
+    testSize = 2000
+    simulationData = generate_1d1d_csv(trainSize, testSize, seed=0)
 
     xTrain = pd.DataFrame(simulationData['xTrain'].numpy())
     yTrain = pd.DataFrame(simulationData['yTrain'].numpy())
@@ -24,9 +26,10 @@ if __name__ == "__main__":
     yTest.to_csv('./data/y_test_1d1d.csv', index=False)
     print("Save 1d1d")
     
+    
     inputDim = 3
     outputClass = 10
-    simulationData = generate_ndnc_csv(inputDim=inputDim, outputClass=outputClass, trainSize=1000, testSize=200, seed=0)
+    simulationData = generate_ndnc_csv(inputDim=inputDim, outputClass=outputClass, trainSize=trainSize, testSize=testSize, seed=0)
     xTrain = pd.DataFrame(simulationData['xTrain'].numpy())
     yTrain = pd.DataFrame(simulationData['yTrain'].numpy())
     xTest = pd.DataFrame(simulationData['xTest'].numpy())
