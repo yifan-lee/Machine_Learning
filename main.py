@@ -8,7 +8,7 @@ from torch.optim import SGD  # stochastic gradient descent
 from utils.train_model import train
 from utils.eval_model import evaluate
 from model.basic_NN import BasicNN_baseline, BasicNN, SimplifiedNN, BetterNN, flixNN, flixNN2
-from model.basic_NN_2dim_inputs_1dim_outputs import SimplifiedNN_dim2, SimplifiedNN_dim2_layer2
+from model.basic_NN_2dim_inputs_1dim_outputs import SimplifiedNN_dim2, SimplifiedNN_dim2_layer2, flexNN_dim2
 from model.basic_NN_2dim_inputs_3dim_1class_outputs import SimplifiedNN_dim2dim3, SimplifiedNN_dim2dim3_layer2
 
 
@@ -84,6 +84,12 @@ optimizer=SGD(model.parameters(), lr=0.01)
 modelTrained = train(model, xTrain2d, yTrain2d, optimizer, criterion, epochs)
 loss = evaluate(model, xTest2d, yTest2d, criterion)
 print(f"MSE for baseline SimplifiedNN_dim2_layer2 model is {loss:.4f}")
+
+model = flexNN_dim2(dims=[2, 5])
+optimizer=SGD(model.parameters(), lr=0.01)
+modelTrained = train(model, xTrain2d, yTrain2d, optimizer, criterion, epochs)
+loss = evaluate(model, xTest2d, yTest2d, criterion)
+print(f"MSE for baseline flexNN_dim2 model is {loss:.4f}")
 
 # if model_class == 'dim2':
 #     data = dat_2dim

@@ -37,18 +37,19 @@ class SimplifiedNN_dim2_layer2(nn.Module):
 
 
 class flexNN_dim2(nn.Module):
-    def __init__(self, dim1=2,dim2=2,*args, **kwargs):
+    def __init__(self, dims=[2,2],*args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.W1 = nn.Parameter(torch.randn(2, dim1))
-        self.B1 = nn.Parameter(torch.randn(dim1))
-        self.W2 = nn.Parameter(torch.randn(dim1, dim2))
-        self.B2 = nn.Parameter(torch.randn(dim2))
-        self.W3 = nn.Parameter(torch.randn(dim2, 1))
-        self.B3 = nn.Parameter(torch.randn(1))
+        inputDim = 2
+        layers = []
+        for dim in dims:
+            layers.append(nn.Linear(inputDim, dim))
+            inputDim = dim
+        self.layers = nn.ModuleList(layers)
+        self.outputLayer = nn.Linear(inputDim, 1)
 
     def forward(self, input):
         x = input.view(-1, 2)
-        y1 = F.relu(x @ self.W1 + self.B1)
-        y2 = F.relu(y1 @ self.W2 + self.B2)
-        output = F.relu(y2 @ self.W3 + self.B3)
+        for layer in self.layers:
+            x = F.relu(layer(x))
+        output = self.outputLayer(x)
         return output
