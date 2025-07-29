@@ -55,26 +55,9 @@ modelTrained = train(model, xTrain, yTrain, optimizer, criterion, epochs)
 loss = evaluate(model, xTest, yTest, criterion)
 print(f"MSE for baseline flixNN model is {loss:.4f}")
 
-#     ### BetterNN
-
-#     model = BetterNN()
-#     test_model(model, data, n_epochs)
-
-#     ### flixNN
-
-#     model = flixNN(dim1=4,dim2=4)
-#     test_model(model, data, n_epochs)
-
-#     ### flixNN2
 
 
-#     model = flixNN2(dim1=5)
-#     test_model(model, data, n_epochs)
-
-
-
-
-# ## 2 dim
+## 2 dim
 
 # if model_class == 'dim2':
 #     data = dat_2dim
