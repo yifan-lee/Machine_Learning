@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F  # activation function ReLU
 
 
-class SimplifiedNN_dim2dim3(nn.Module):
+class nn_dim3c1(nn.Module):
     def __init__(self, dim1=2, num_classes=3, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.W1 = nn.Parameter(torch.randn(2, dim1))
@@ -19,7 +19,7 @@ class SimplifiedNN_dim2dim3(nn.Module):
         return output
     
     
-class SimplifiedNN_dim2dim3_layer2(nn.Module):
+class nn_dim3c1_flix(nn.Module):
     def __init__(self, dim1=2, dim2=2, num_classes=3, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.W1 = nn.Parameter(torch.randn(2, dim1))

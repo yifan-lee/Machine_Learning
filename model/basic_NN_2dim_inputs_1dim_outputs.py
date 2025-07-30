@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F  # activation function ReLU
 
 
-class SimplifiedNN_dim2(nn.Module):
+class NN_dim2(nn.Module):
     def __init__(self, dim1=2,*args, **kwargs):
         super().__init__(*args, **kwargs)
         self.W1 = nn.Parameter(torch.randn(2, dim1))
@@ -18,7 +18,7 @@ class SimplifiedNN_dim2(nn.Module):
         return output
     
     
-class SimplifiedNN_dim2_layer2(nn.Module):
+class NN_dim2_layer2(nn.Module):
     def __init__(self, dim1=2,dim2=2,*args, **kwargs):
         super().__init__(*args, **kwargs)
         self.W1 = nn.Parameter(torch.randn(2, dim1))
@@ -36,7 +36,7 @@ class SimplifiedNN_dim2_layer2(nn.Module):
         return output
 
 
-class flexNN_dim2(nn.Module):
+class NN_dim2_flixible_layer(nn.Module):
     def __init__(self, dims=[2,2],*args, **kwargs):
         super().__init__(*args, **kwargs)
         inputDim = 2
@@ -51,5 +51,28 @@ class flexNN_dim2(nn.Module):
         x = input.view(-1, 2)
         for layer in self.layers:
             x = F.relu(layer(x))
+        output = self.outputLayer(x)
+        return output
+    
+    
+class NN_dim2_flixible_layer_dropout(nn.Module):
+    def __init__(self, dims=[2,2],dropoutRate=0.5,*args, **kwargs):
+        super().__init__(*args, **kwargs)
+        inputDim = 2
+        layers = []
+        for dim in dims:
+            layers.append(nn.Linear(inputDim, dim))
+            layers.append(nn.Dropout(dropoutRate))
+            inputDim = dim
+        self.layers = nn.ModuleList(layers)
+        self.outputLayer = nn.Linear(inputDim, 1)
+
+    def forward(self, input):
+        x = input.view(-1, 2)
+        for layer in self.layers:
+            if layer.__class__.__name__ == 'Dropout':
+                x = layer(x)
+            else:
+                x = F.relu(layer(x))
         output = self.outputLayer(x)
         return output
