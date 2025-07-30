@@ -31,6 +31,7 @@ def draw_CNN_incorrect_predictions(data, figurePath,fileName):
     xAll = data['x']
     yAll = data['y']
     predictAll = data['predict']
+    letters = [chr(ord('A') + i) for i in range(26)]
     
     for i in range(len(xAll)):
         x = xAll[i]
@@ -38,7 +39,7 @@ def draw_CNN_incorrect_predictions(data, figurePath,fileName):
         predict = predictAll[i]
         plt.figure()
         plt.imshow(x.squeeze(), cmap='gray')
-        plt.title(f"True: {y}, Pred: {predict}")
+        plt.title(f"True: {letters[y]}, Pred: {letters[predict]}")
         plt.axis('off')
         plt.savefig(f'{figurePath}/{fileName}_{i}.png')
         plt.close()

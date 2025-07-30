@@ -18,7 +18,7 @@ from utils.draw_figure import prepare_data_for_draw_CNN_incorrect_predictions, d
 from model.basic_NN import nn_baseline, nn_basic, nn_simple, nn_layer1, nn_layer1, nn_layer2
 from model.basic_NN_2dim_inputs_1dim_outputs import NN_dim2, NN_dim2_layer2, NN_dim2_flixible_layer, NN_dim2_flixible_layer_dropout
 from model.basic_NN_2dim_inputs_3dim_1class_outputs import nn_dim3c1,nn_dim3c1_dropout,nn_dim3c1_dropout_sequential
-from model.CNN import CNN
+from model.CNN import CNN, BetterCNN
 
 
 
@@ -180,10 +180,10 @@ if 1:
     epochs = 10
     patience = 1
     device = 'mps' if torch.backends.mps.is_available() else 'cpu'
-    model = CNN().to(device)
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=1e-3)
     
+    model = CNN().to(device)
+    optimizer = optim.Adam(model.parameters(), lr=1e-3)
     model = train(
         model=model, 
         x=trainCNNLoader, 
@@ -203,7 +203,30 @@ if 1:
     )
     print(f"Cross entropy for CNN model is {correctPercent*100:.2f} %")
     dataForFigure = prepare_data_for_draw_CNN_incorrect_predictions(testDataset, wrongIndexes)
-    draw_CNN_incorrect_predictions(dataForFigure, figurePath='./figures', fileName='cnn_wrong_predictions')
+    draw_CNN_incorrect_predictions(dataForFigure, figurePath='./figures', fileName='CNN_wrong_predictions')
 
 
+    model = BetterCNN().to(device)
+    optimizer = optim.Adam(model.parameters(), lr=1e-3)
+    model = train(
+        model=model, 
+        x=trainCNNLoader, 
+        y=None, 
+        optimizer=optimizer, 
+        criterion=criterion, 
+        epochs=epochs, 
+        patience=patience, 
+        device=device
+    )
+    correctPercent, wrongIndexes = evaluate_CNN(
+        model=model, 
+        x=testCNNLoader, 
+        y=None, 
+        criterion=criterion, 
+        device=device
+    )
+    print(f"Cross entropy for CNN model is {correctPercent*100:.2f} %")
+    dataForFigure = prepare_data_for_draw_CNN_incorrect_predictions(testDataset, wrongIndexes)
+    draw_CNN_incorrect_predictions(dataForFigure, figurePath='./figures', fileName='BetterCNN_wrong_predictions')
+    
 print("Success!")
