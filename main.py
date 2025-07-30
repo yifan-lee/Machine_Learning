@@ -9,7 +9,7 @@ from utils.train_model import train
 from utils.eval_model import evaluate
 from model.basic_NN import nn_baseline, nn_basic, nn_simple, nn_layer1, nn_layer1, nn_layer2
 from model.basic_NN_2dim_inputs_1dim_outputs import NN_dim2, NN_dim2_layer2, NN_dim2_flixible_layer, NN_dim2_flixible_layer_dropout
-from model.basic_NN_2dim_inputs_3dim_1class_outputs import nn_dim3c1,nn_dim3c1_dropout
+from model.basic_NN_2dim_inputs_3dim_1class_outputs import nn_dim3c1,nn_dim3c1_dropout,nn_dim3c1_dropout_sequential
 
 
 
@@ -120,13 +120,25 @@ if 1:
     modelTrained = train(model, xTrainndnc, yTrainndnc, optimizer, criterion, epochs)
     loss = evaluate(model, xTestndnc, yTestndnc, criterion)
     print(f"Cross entropy for nn_dim3c1 model is {loss:.4f}")
+    
+    model = nn_dim3c1_dropout(dims=[32,16], dropoutRate=0.5)
+    optimizer=SGD(model.parameters(), lr=0.01)
+    modelTrained = train(model, xTrainndnc, yTrainndnc, optimizer, criterion, epochs)
+    loss = evaluate(model, xTestndnc, yTestndnc, criterion)
+    print(f"Cross entropy for nn_dim3c1_dropout model is {loss:.4f}")
+    
+    model = nn_dim3c1_dropout_sequential(dims=[32,16], dropoutRate=0.5)
+    optimizer=SGD(model.parameters(), lr=0.01)
+    modelTrained = train(model, xTrainndnc, yTrainndnc, optimizer, criterion, epochs)
+    loss = evaluate(model, xTestndnc, yTestndnc, criterion)
+    print(f"Cross entropy for nn_dim3c1_dropout_sequential model is {loss:.4f}")
 
-    for dims in [[32,16], [64,32], [64,64,32]]:
-        for dr in [0.1, 0.3, 0.5]:
-            model = nn_dim3c1_dropout(dims=dims, dropoutRate=dr)
-            optimizer=SGD(model.parameters(), lr=0.01)
-            modelTrained = train(model, xTrainndnc, yTrainndnc, optimizer, criterion, epochs)
-            loss = evaluate(model, xTestndnc, yTestndnc, criterion)
-            print(f"Cross entropy for dims: {dims} and dropout rate: {dr} model is {loss:.4f}")
+    # for dims in [[32,16], [64,32], [64,64,32]]:
+    #     for dr in [0.1, 0.3, 0.5]:
+    #         model = nn_dim3c1_dropout(dims=dims, dropoutRate=dr)
+    #         optimizer=SGD(model.parameters(), lr=0.01)
+    #         modelTrained = train(model, xTrainndnc, yTrainndnc, optimizer, criterion, epochs)
+    #         loss = evaluate(model, xTestndnc, yTestndnc, criterion)
+    #         print(f"Cross entropy for dims: {dims} and dropout rate: {dr} model is {loss:.4f}")
 
 print("Success!")

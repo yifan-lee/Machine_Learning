@@ -44,3 +44,20 @@ class nn_dim3c1_dropout(nn.Module):
         output = self.outputLayer(x)
         return output
     
+class nn_dim3c1_dropout_sequential(nn.Module):
+    def __init__(self, inputDim=3, num_classes=10, dims=[2,2], dropoutRate=0.5, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        layers = []
+        self.inputDim = inputDim
+        for dim in dims:
+            layers.append(nn.Linear(inputDim, dim))
+            layers.append(nn.Dropout(dropoutRate))
+            inputDim = dim
+        layers.append(nn.Linear(inputDim, num_classes))
+        self.hiddenLayers = nn.Sequential(*layers)
+
+    def forward(self, input):
+        x = input.view(-1, self.inputDim)
+        x = self.hiddenLayers(x)
+        return x
+    
