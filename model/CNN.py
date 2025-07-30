@@ -47,7 +47,7 @@ class BetterCNN(nn.Module):
         )
         self.fc = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(64 * 1 * 1, 128),
+            nn.Linear(64 * 3 * 3, 128),
             nn.ReLU(),
             nn.Dropout(0.5),
             nn.Linear(128, 26)
