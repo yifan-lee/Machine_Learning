@@ -70,6 +70,9 @@ testDataset = datasets.EMNIST(
     download=True,
     transform=transform
 )
+# Adjust labels: EMNIST 'letters' split labels go from 1 to 26, so subtract 1
+trainDataset.targets -= 1
+testDataset.targets -= 1
 batchSize = 32
 trainCNNLoader = DataLoader(trainDataset, batch_size=batchSize, shuffle=True)
 testCNNLoader = DataLoader(testDataset, batch_size=batchSize, shuffle=False)
