@@ -9,7 +9,7 @@ from utils.train_model import train
 from utils.eval_model import evaluate
 from model.basic_NN import nn_baseline, nn_basic, nn_simple, nn_layer1, nn_layer1, nn_layer2
 from model.basic_NN_2dim_inputs_1dim_outputs import NN_dim2, NN_dim2_layer2, NN_dim2_flixible_layer, NN_dim2_flixible_layer_dropout
-# from model.basic_NN_2dim_inputs_3dim_1class_outputs import SimplifiedNN_dim2dim3, SimplifiedNN_dim2dim3_layer2
+from model.basic_NN_2dim_inputs_3dim_1class_outputs import nn_dim3c1
 
 
 
@@ -34,6 +34,17 @@ xTrain2d = torch.tensor(xTrain2d, dtype=torch.float32)
 yTrain2d = torch.tensor(yTrain2d, dtype=torch.float32)
 xTest2d = torch.tensor(xTest2d, dtype=torch.float32)
 yTest2d = torch.tensor(yTest2d, dtype=torch.float32)
+
+
+xTrainndnc = pd.read_csv('data/x_train_ndnc.csv', header=None).values
+yTrainndnc = pd.read_csv('data/y_train_ndnc.csv', header=None).values
+xTestndnc = pd.read_csv('data/x_test_ndnc.csv', header=None).values
+yTestndnc = pd.read_csv('data/y_test_ndnc.csv', header=None).values
+
+xTrainndnc = torch.tensor(xTrainndnc, dtype=torch.float32)
+yTrainndnc = torch.tensor(yTrainndnc, dtype=torch.int64).squeeze()
+xTestndnc = torch.tensor(xTestndnc, dtype=torch.float32)
+yTestndnc = torch.tensor(yTestndnc, dtype=torch.int64).squeeze()
 
 
 ## 1 dim
@@ -71,7 +82,7 @@ if 0:
 
 ## 2 dim
 
-if 1:
+if 0:
     epochs = 5000
     criterion=torch.nn.MSELoss()
 
@@ -99,10 +110,14 @@ if 1:
     loss = evaluate(model, xTest2d, yTest2d, criterion)
     print(f"MSE for baseline NN_dim2_flixible_layer_dropout model is {loss:.4f}")
 
-if 0:
+if 1:
     epochs = 1000
     criterion=torch.nn.CrossEntropyLoss()
 
-    model = SimplifiedNN_dim2(dim1=3)
+    model = nn_dim3c1(dims=[2,2])
+    optimizer=SGD(model.parameters(), lr=0.01)
+    modelTrained = train(model, xTrainndnc, yTrainndnc, optimizer, criterion, epochs)
+    loss = evaluate(model, xTestndnc, yTestndnc, criterion)
+    print(f"MSE for baseline nn_dim3c1 model is {loss:.4f}")
 
 print("Success!")
