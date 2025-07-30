@@ -20,12 +20,17 @@ def evaluate_CNN(model, x, y=None, criterion=None, device='mps'):
     model.eval()
     totalCount = 0
     correctCount = 0
+    wrongIndexes = []
     with torch.no_grad():
-        for x, y in dataLoader:
+        for batchIndex, (x, y) in enumerate(dataLoader):
             x = x.to(device)
             y = y.to(device)
             output = model(x)
             pred = output.argmax(dim=1)
             correctCount += (pred == y).sum().item()
             totalCount += y.size(0)
-    return correctCount / totalCount if totalCount > 0 else 0
+            for i in range(len(pred)):
+                if pred[i] != y[i]:
+                    wrongIndex = batchIndex * dataLoader.batch_size + i
+                    wrongIndexes.append((wrongIndex, pred[i].item(), y[i].item()))
+    return correctCount / totalCount if totalCount > 0 else 0, wrongIndexes
