@@ -1,7 +1,18 @@
+from typing import Optional, Union
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 
-def train(model, x, y=None, optimizer=None, criterion=None, epochs=20, patience=20, device='mps', printLoss=False):
+def train(
+    model, 
+    x: Union[torch.Tensor, DataLoader, None], 
+    y: Union[torch.Tensor, DataLoader, None]=None, 
+    optimizer=None, 
+    criterion=None, 
+    epochs=20, 
+    patience=20, 
+    device='mps', 
+    printLoss=False
+):
     if y is None:
         dataLoader = x
     else:

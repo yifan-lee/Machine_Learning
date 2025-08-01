@@ -1,6 +1,9 @@
 import torch
 
-def evaluate(model, x, y, criterion):
+def evaluate(model, x, y, criterion, device='mps'):
+    x = x.to(device)
+    y = y.to(device)
+    model.to(device)
     yPred = model(x)
     loss = criterion(yPred, y)
     return loss

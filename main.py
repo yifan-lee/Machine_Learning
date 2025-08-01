@@ -30,20 +30,31 @@ from sklearn.model_selection import train_test_split
 device = 'mps' if torch.backends.mps.is_available() else 'cpu'
 print(f"Using device: {device}")
 
-mod = 'RNN'
-
-## Load data
+mod = 'nn_1d1d'
 
 if mod == 'nn_1d1d':
-    xTrain = pd.read_csv('data/x_train_1d1d.csv', header=None).values
-    yTrain = pd.read_csv('data/y_train_1d1d.csv', header=None).values
-    xTest = pd.read_csv('data/x_test_1d1d.csv', header=None).values
-    yTest = pd.read_csv('data/y_test_1d1d.csv', header=None).values
+    from run.run_nn_1d1d import run_nn_1d1d
+    dataPath = {
+            'xTrain': './data/NN/x_train_1d1d.csv',
+            'yTrain': './data/NN/y_train_1d1d.csv',
+            'xTest': './data/NN/x_test_1d1d.csv',
+            'yTest': './data/NN/y_test_1d1d.csv'
+        }
+    epochs = 1000
+    criterion=torch.nn.MSELoss()
+    run_nn_1d1d(dataPath, epochs, criterion)
 
-    xTrain = torch.tensor(xTrain, dtype=torch.float32)
-    yTrain = torch.tensor(yTrain, dtype=torch.float32)
-    xTest = torch.tensor(xTest, dtype=torch.float32)
-    yTest = torch.tensor(yTest, dtype=torch.float32)
+# if mod == 'nn_1d1d':
+    
+#     xTrain = pd.read_csv(path['xTrain'], header=None).values
+#     yTrain = pd.read_csv(path['yTrain'], header=None).values
+#     xTest = pd.read_csv(path['xTest'], header=None).values
+#     yTest = pd.read_csv(path['yTest'], header=None).values
+
+#     xTrain = torch.tensor(xTrain, dtype=torch.float32)
+#     yTrain = torch.tensor(yTrain, dtype=torch.float32)
+#     xTest = torch.tensor(xTest, dtype=torch.float32)
+#     yTest = torch.tensor(yTest, dtype=torch.float32)
 
 if mod == 'nn_2d1d':
 
@@ -114,33 +125,33 @@ if mod == 'RNN':
 
 ## 1 dim
 
-if mod == 'nn_1d1d':
-    epochs = 1000
-    criterion=torch.nn.MSELoss()
+# if mod == 'nn_1d1d':
+#     epochs = 1000
+#     criterion=torch.nn.MSELoss()
 
-    model = nn_basic()
-    optimizer=SGD(model.parameters(), lr=0.01)
-    modelTrained = train(model, xTrain, yTrain, optimizer, criterion, epochs)
-    loss = evaluate(model, xTest, yTest, criterion)
-    print(f"MSE for nn_basic model is {loss:.4f}")
+#     model = nn_basic()
+#     optimizer=SGD(model.parameters(), lr=0.01)
+#     modelTrained = train(model, xTrain, yTrain, optimizer, criterion, epochs)
+#     loss = evaluate(model, xTest, yTest, criterion)
+#     print(f"MSE for nn_basic model is {loss:.4f}")
 
-    model = nn_simple()
-    optimizer=SGD(model.parameters(), lr=0.01)
-    modelTrained = train(model, xTrain, yTrain, optimizer, criterion, epochs)
-    loss = evaluate(model, xTest, yTest, criterion)
-    print(f"MSE for nn_simple model is {loss:.4f}")
+#     model = nn_simple()
+#     optimizer=SGD(model.parameters(), lr=0.01)
+#     modelTrained = train(model, xTrain, yTrain, optimizer, criterion, epochs)
+#     loss = evaluate(model, xTest, yTest, criterion)
+#     print(f"MSE for nn_simple model is {loss:.4f}")
 
-    model = nn_layer1(hidden_dim=5)
-    optimizer=SGD(model.parameters(), lr=0.01)
-    modelTrained = train(model, xTrain, yTrain, optimizer, criterion, epochs)
-    loss = evaluate(model, xTest, yTest, criterion)
-    print(f"MSE for nn_layer1 model is {loss:.4f}")
+#     model = nn_layer1(hidden_dim=5)
+#     optimizer=SGD(model.parameters(), lr=0.01)
+#     modelTrained = train(model, xTrain, yTrain, optimizer, criterion, epochs)
+#     loss = evaluate(model, xTest, yTest, criterion)
+#     print(f"MSE for nn_layer1 model is {loss:.4f}")
 
-    model = nn_layer2(dim1=4,dim2=4)
-    optimizer=SGD(model.parameters(), lr=0.01)
-    modelTrained = train(model, xTrain, yTrain, optimizer, criterion, epochs)
-    loss = evaluate(model, xTest, yTest, criterion)
-    print(f"MSE for nn_layer2 model is {loss:.4f}")
+#     model = nn_layer2(dim1=4,dim2=4)
+#     optimizer=SGD(model.parameters(), lr=0.01)
+#     modelTrained = train(model, xTrain, yTrain, optimizer, criterion, epochs)
+#     loss = evaluate(model, xTest, yTest, criterion)
+#     print(f"MSE for nn_layer2 model is {loss:.4f}")
     
 
 
