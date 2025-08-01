@@ -30,7 +30,7 @@ from sklearn.model_selection import train_test_split
 device = 'mps' if torch.backends.mps.is_available() else 'cpu'
 print(f"Using device: {device}")
 
-mod = 'nn_2d1d'
+mod = 'CNN'
 
 if mod == 'nn_1d1d':
     from run.run_nn_1d1d import run_nn_1d1d
@@ -42,19 +42,8 @@ if mod == 'nn_1d1d':
         }
     epochs = 1000
     criterion=torch.nn.MSELoss()
-    run_nn_1d1d(dataPath, epochs, criterion)
+    run_nn_1d1d(dataPath, criterion, epochs)
 
-# if mod == 'nn_1d1d':
-    
-#     xTrain = pd.read_csv(path['xTrain'], header=None).values
-#     yTrain = pd.read_csv(path['yTrain'], header=None).values
-#     xTest = pd.read_csv(path['xTest'], header=None).values
-#     yTest = pd.read_csv(path['yTest'], header=None).values
-
-#     xTrain = torch.tensor(xTrain, dtype=torch.float32)
-#     yTrain = torch.tensor(yTrain, dtype=torch.float32)
-#     xTest = torch.tensor(xTest, dtype=torch.float32)
-#     yTest = torch.tensor(yTest, dtype=torch.float32)
 
 if mod == 'nn_2d1d':
     from run.run_nn_2d1d import run_nn_2d1d
@@ -66,11 +55,8 @@ if mod == 'nn_2d1d':
         }
     epochs = 1000
     criterion=torch.nn.MSELoss()
-    run_nn_2d1d(dataPath, epochs, criterion)
+    run_nn_2d1d(dataPath, criterion, epochs)
     
-    
-    
-
 
 if mod == 'nn_ndnc':
     from run.run_nn_ndnc import run_nn_ndnc
@@ -82,40 +68,39 @@ if mod == 'nn_ndnc':
         }
     epochs = 500
     criterion=torch.nn.CrossEntropyLoss()
-    run_nn_ndnc(dataPath, epochs, criterion)
+    run_nn_ndnc(dataPath, criterion, epochs)
     
-    # xTrainndnc = pd.read_csv('data/x_train_ndnc.csv', header=None).values
-    # yTrainndnc = pd.read_csv('data/y_train_ndnc.csv', header=None).values
-    # xTestndnc = pd.read_csv('data/x_test_ndnc.csv', header=None).values
-    # yTestndnc = pd.read_csv('data/y_test_ndnc.csv', header=None).values
-
-    # xTrainndnc = torch.tensor(xTrainndnc, dtype=torch.float32)
-    # yTrainndnc = torch.tensor(yTrainndnc, dtype=torch.int64).squeeze()
-    # xTestndnc = torch.tensor(xTestndnc, dtype=torch.float32)
-    # yTestndnc = torch.tensor(yTestndnc, dtype=torch.int64).squeeze()
-
+    
 if mod == 'CNN':
-    transform = transforms.Compose([transforms.ToTensor()])
-    trainDataset = datasets.EMNIST(
-        root='./data',
-        split='letters',
-        train=True,
-        download=True,
-        transform=transform
-    )
-    testDataset = datasets.EMNIST(
-        root='./data',
-        split='letters',
-        train=False,
-        download=True,
-        transform=transform
-    )
-    # Adjust labels: EMNIST 'letters' split labels go from 1 to 26, so subtract 1
-    trainDataset.targets -= 1
-    testDataset.targets -= 1
-    batchSize = 32
-    trainCNNLoader = DataLoader(trainDataset, batch_size=batchSize, shuffle=True)
-    testCNNLoader = DataLoader(testDataset, batch_size=batchSize, shuffle=False)
+    from run.run_cnn import run_cnn
+    epochs = 10
+    patience = 1
+    criterion = nn.CrossEntropyLoss()
+    path = './data/CNN'
+    
+    run_cnn(path,criterion, epochs,patience,device)
+    
+    # transform = transforms.Compose([transforms.ToTensor()])
+    # trainDataset = datasets.EMNIST(
+    #     root='./data/CNN',
+    #     split='letters',
+    #     train=True,
+    #     download=True,
+    #     transform=transform
+    # )
+    # testDataset = datasets.EMNIST(
+    #     root='./data/CNN',
+    #     split='letters',
+    #     train=False,
+    #     download=True,
+    #     transform=transform
+    # )
+    # # Adjust labels: EMNIST 'letters' split labels go from 1 to 26, so subtract 1
+    # trainDataset.targets -= 1
+    # testDataset.targets -= 1
+    # batchSize = 32
+    # trainCNNLoader = DataLoader(trainDataset, batch_size=batchSize, shuffle=True)
+    # testCNNLoader = DataLoader(testDataset, batch_size=batchSize, shuffle=False)
 
 
 
@@ -235,57 +220,57 @@ if mod == 'RNN':
 
 
 ## CNN
-if mod == 'CNN':
-    epochs = 10
-    patience = 1
+# if mod == 'CNN':
+#     epochs = 10
+#     patience = 1
     
-    criterion = nn.CrossEntropyLoss()
-    model = CNN()
-    optimizer = optim.Adam(model.parameters(), lr=1e-3)
-    model = train(
-        model=model, 
-        x=trainCNNLoader, 
-        y=None, 
-        optimizer=optimizer, 
-        criterion=criterion, 
-        epochs=epochs, 
-        patience=patience, 
-        device=device
-    )
-    correctPercent, wrongIndexes = evaluate_CNN(
-        model=model, 
-        x=testCNNLoader, 
-        y=None, 
-        criterion=criterion, 
-        device=device
-    )
-    print(f"Cross entropy for CNN model is {correctPercent*100:.2f} %")
-    dataForFigure = prepare_data_for_draw_CNN_incorrect_predictions(testDataset, wrongIndexes)
-    draw_CNN_incorrect_predictions(dataForFigure, figurePath='./figures', fileName='CNN_wrong_predictions')
+#     criterion = nn.CrossEntropyLoss()
+#     model = CNN()
+#     optimizer = optim.Adam(model.parameters(), lr=1e-3)
+#     model = train(
+#         model=model, 
+#         x=trainCNNLoader, 
+#         y=None, 
+#         optimizer=optimizer, 
+#         criterion=criterion, 
+#         epochs=epochs, 
+#         patience=patience, 
+#         device=device
+#     )
+#     correctPercent, wrongIndexes = evaluate_CNN(
+#         model=model, 
+#         x=testCNNLoader, 
+#         y=None, 
+#         criterion=criterion, 
+#         device=device
+#     )
+#     print(f"Cross entropy for CNN model is {correctPercent*100:.2f} %")
+#     dataForFigure = prepare_data_for_draw_CNN_incorrect_predictions(testDataset, wrongIndexes)
+#     draw_CNN_incorrect_predictions(dataForFigure, figurePath='./figures', fileName='CNN_wrong_predictions')
 
 
-    model = BetterCNN()
-    optimizer = optim.Adam(model.parameters(), lr=1e-3)
-    model = train(
-        model=model, 
-        x=trainCNNLoader, 
-        y=None, 
-        optimizer=optimizer, 
-        criterion=criterion, 
-        epochs=epochs, 
-        patience=patience, 
-        device=device
-    )
-    correctPercent, wrongIndexes = evaluate_CNN(
-        model=model, 
-        x=testCNNLoader, 
-        y=None, 
-        criterion=criterion, 
-        device=device
-    )
-    print(f"Cross entropy for CNN model is {correctPercent*100:.2f} %")
-    dataForFigure = prepare_data_for_draw_CNN_incorrect_predictions(testDataset, wrongIndexes)
-    draw_CNN_incorrect_predictions(dataForFigure, figurePath='./figures', fileName='BetterCNN_wrong_predictions')
+#     model = BetterCNN()
+#     optimizer = optim.Adam(model.parameters(), lr=1e-3)
+#     model = train(
+#         model=model, 
+#         x=trainCNNLoader, 
+#         y=None, 
+#         optimizer=optimizer, 
+#         criterion=criterion, 
+#         epochs=epochs, 
+#         patience=patience, 
+#         device=device
+#     )
+#     correctPercent, wrongIndexes = evaluate_CNN(
+#         model=model, 
+#         x=testCNNLoader, 
+#         y=None, 
+#         criterion=criterion, 
+#         device=device
+#     )
+#     print(f"Cross entropy for CNN model is {correctPercent*100:.2f} %")
+#     dataForFigure = prepare_data_for_draw_CNN_incorrect_predictions(testDataset, wrongIndexes)
+#     draw_CNN_incorrect_predictions(dataForFigure, figurePath='./figures', fileName='BetterCNN_wrong_predictions')
     
     
     

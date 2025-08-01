@@ -10,7 +10,7 @@ from utils.eval_model import evaluate
 from utils.load_data_from_csv import load_data_from_csv
 
 
-def run_nn_ndnc(path, epochs, criterion):
+def run_nn_ndnc(path, criterion, epochs):
     dataRaw = load_data_from_csv(path)
     data = transfor_data_to_tensor(dataRaw)
     

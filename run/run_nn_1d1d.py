@@ -8,7 +8,7 @@ from utils.train_model import train
 from utils.eval_model import evaluate
 from utils.load_data_from_csv import load_data_from_csv
 
-def run_nn_1d1d(path, epochs, criterion):
+def run_nn_1d1d(path, criterion, epochs):
     dataRaw = load_data_from_csv(path)
     data = transfor_data_to_tensor(dataRaw)
     
