@@ -12,14 +12,14 @@ from utils.eval_model import evaluate, evaluate_CNN
 from utils.load_data_from_csv import load_data_from_csv
 
 
-def run_cnn(path,criterion, epochs,patience,device):
+def run_cnn(path,criterion, epochs,patience,device,predFunction):
     data = _load_data(path)
     
     model = CNN()
-    _train_and_eval_model(model, data, criterion, epochs,patience,device)
+    _train_and_eval_model(model, data, criterion, epochs,patience,device,predFunction)
     
     model = BetterCNN()
-    _train_and_eval_model(model, data, criterion, epochs,patience,device)
+    _train_and_eval_model(model, data, criterion, epochs,patience,device,predFunction)
     
 def _load_data(path):
     transform = transforms.Compose([transforms.ToTensor()])
@@ -51,7 +51,7 @@ def _load_data(path):
 
 
 
-def _train_and_eval_model(model, data, criterion, epochs,patience,device):
+def _train_and_eval_model(model, data, criterion, epochs,patience,device,predFunction):
     trainCNNLoader = data['trainCNNLoader']
     testCNNLoader = data['testCNNLoader']
     optimizer = Adam(model.parameters(), lr=1e-3)
@@ -70,7 +70,8 @@ def _train_and_eval_model(model, data, criterion, epochs,patience,device):
         x=testCNNLoader, 
         y=None, 
         criterion=criterion, 
-        device=device
+        device=device,
+        predFunction=predFunction
     )
     print(f"Correct percent for {model.__class__.__name__} model is {correctPercent*100:.2f} %")
     return modelTrained

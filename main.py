@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader
 
 
 from utils.train_model import train
-from utils.eval_model import evaluate, evaluate_CNN, evaluate_RNN
+from utils.eval_model import evaluate, evaluate_CNN
 from utils.draw_figure import prepare_data_for_draw_CNN_incorrect_predictions, draw_CNN_incorrect_predictions
 from utils.word_to_index import tokenize
 from utils.DataSetForDataLoader import TextDataset
@@ -77,8 +77,11 @@ if mod == 'CNN':
     patience = 1
     criterion = nn.CrossEntropyLoss()
     path = './data/CNN'
+    def predict_CNN_result(output):
+        return output.argmax(dim=1)
+    predFunction =predict_CNN_result
     
-    run_cnn(path,criterion, epochs,patience,device)
+    run_cnn(path,criterion, epochs,patience,device,predFunction)
     
     # transform = transforms.Compose([transforms.ToTensor()])
     # trainDataset = datasets.EMNIST(
