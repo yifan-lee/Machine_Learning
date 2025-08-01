@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 
-def train(model, x, y=None, optimizer=None, criterion=None, epochs=20, patience=20, device='mps'):
+def train(model, x, y=None, optimizer=None, criterion=None, epochs=20, patience=20, device='mps', printLoss=False):
     if y is None:
         dataLoader = x
     else:
@@ -23,6 +23,8 @@ def train(model, x, y=None, optimizer=None, criterion=None, epochs=20, patience=
             loss = criterion(yPred, y)
             loss.backward()
             optimizer.step()
+        if printLoss:
+            print(f"Epoch {epoch+1}, Loss: {loss.item():.4f}")
             
         # early stopping
         current_loss = loss.item()
