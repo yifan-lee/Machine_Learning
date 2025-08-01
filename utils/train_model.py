@@ -1,13 +1,15 @@
 from typing import Optional, Union
 import torch
 from torch.utils.data import DataLoader, TensorDataset
+from torch.nn.modules.loss import _Loss
+from torch.optim import Optimizer
 
 def train(
     model, 
-    x: Union[torch.Tensor, DataLoader, None], 
-    y: Union[torch.Tensor, DataLoader, None]=None, 
-    optimizer=None, 
-    criterion=None, 
+    x, 
+    y=None, 
+    optimizer: Optimizer=None,
+    criterion: _Loss=None,
     epochs=20, 
     patience=20, 
     device='mps', 

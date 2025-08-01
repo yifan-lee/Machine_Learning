@@ -12,20 +12,20 @@ from utils.load_data_from_csv import load_data_from_csv
 
 def run_nn_ndnc(path, criterion, epochs):
     dataRaw = load_data_from_csv(path)
-    data = transfor_data_to_tensor(dataRaw)
+    data = _transfor_data_to_tensor(dataRaw)
     
     model = nn_dim3c1(dims=[20,20,20])
-    train_and_eval_model(model, data, criterion, epochs)
+    _train_and_eval_model(model, data, criterion, epochs)
     
     model = nn_dim3c1_dropout(dims=[32,16], dropoutRate=0.5)
-    train_and_eval_model(model, data, criterion, epochs)
+    _train_and_eval_model(model, data, criterion, epochs)
     
     model = nn_dim3c1_dropout_sequential(dims=[32,16], dropoutRate=0.5)
-    train_and_eval_model(model, data, criterion, epochs)
+    _train_and_eval_model(model, data, criterion, epochs)
     
     
 
-def transfor_data_to_tensor(dataRaw):
+def _transfor_data_to_tensor(dataRaw):
     xTrain = torch.tensor(dataRaw['xTrain'], dtype=torch.float32)
     yTrain = torch.tensor(dataRaw['yTrain'], dtype=torch.int64)
     xTest = torch.tensor(dataRaw['xTest'], dtype=torch.float32)
@@ -39,7 +39,7 @@ def transfor_data_to_tensor(dataRaw):
     return data
 
 
-def train_and_eval_model(model, data, criterion, epochs):
+def _train_and_eval_model(model, data, criterion, epochs):
     xTrain = data['xTrain']
     yTrain = data['yTrain']
     xTest = data['xTest']

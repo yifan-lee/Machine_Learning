@@ -10,7 +10,7 @@ def evaluate(model, x, y, criterion, device='mps'):
 
 
 
-def evaluate_CNN(model, x, y=None, criterion=None, device='mps'):
+def evaluate_CNN(model, x, y=None, criterion=None, device='mps',compareFunction = None):
     if y is None:
         dataLoader = x
     else:

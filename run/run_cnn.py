@@ -13,15 +13,15 @@ from utils.load_data_from_csv import load_data_from_csv
 
 
 def run_cnn(path,criterion, epochs,patience,device):
-    data = load_data(path)
+    data = _load_data(path)
     
     model = CNN()
-    train_and_eval_model(model, data, criterion, epochs,patience,device)
+    _train_and_eval_model(model, data, criterion, epochs,patience,device)
     
     model = BetterCNN()
-    train_and_eval_model(model, data, criterion, epochs,patience,device)
+    _train_and_eval_model(model, data, criterion, epochs,patience,device)
     
-def load_data(path):
+def _load_data(path):
     transform = transforms.Compose([transforms.ToTensor()])
     trainDataset = datasets.EMNIST(
         root=path,
@@ -51,7 +51,7 @@ def load_data(path):
 
 
 
-def train_and_eval_model(model, data, criterion, epochs,patience,device):
+def _train_and_eval_model(model, data, criterion, epochs,patience,device):
     trainCNNLoader = data['trainCNNLoader']
     testCNNLoader = data['testCNNLoader']
     optimizer = Adam(model.parameters(), lr=1e-3)
