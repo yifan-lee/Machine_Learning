@@ -1,7 +1,7 @@
 import torch.nn as nn
 
 class BasicRNN(nn.Module):
-    def __init__(self, featureDim=1, hiddenDim=128, outputDim=5):
+    def __init__(self, featureDim=1, hiddenDim=128, outputDim=1):
         super().__init__()
         self.rnn = nn.RNN(featureDim, hiddenDim, batch_first=True)
         self.fc = nn.Linear(hiddenDim, outputDim)

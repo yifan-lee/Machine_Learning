@@ -12,7 +12,7 @@ def train(model, x, y=None, optimizer=None, criterion=None, epochs=20, patience=
         )
     best_loss = float("inf")
     counter = 0
-    
+    model.to(device)
     model.train()
     for epoch in range(epochs):
         for x, y in dataLoader:

@@ -20,7 +20,9 @@ from model.basic_NN_2dim_inputs_1dim_outputs import NN_dim2, NN_dim2_layer2, NN_
 from model.basic_NN_2dim_inputs_3dim_1class_outputs import nn_dim3c1,nn_dim3c1_dropout,nn_dim3c1_dropout_sequential
 from model.CNN import CNN, BetterCNN
 
-
+## Settings
+device = 'mps' if torch.backends.mps.is_available() else 'cpu'
+print(f"Using device: {device}")
 
 ## Load data
 xTrain = pd.read_csv('data/x_train_1d1d.csv', header=None).values
@@ -176,13 +178,12 @@ if 0:
 
 
 ## CNN
-if 1:
+if 0:
     epochs = 10
     patience = 1
-    device = 'mps' if torch.backends.mps.is_available() else 'cpu'
-    criterion = nn.CrossEntropyLoss()
     
-    model = CNN().to(device)
+    criterion = nn.CrossEntropyLoss()
+    model = CNN()
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
     model = train(
         model=model, 
@@ -206,7 +207,7 @@ if 1:
     draw_CNN_incorrect_predictions(dataForFigure, figurePath='./figures', fileName='CNN_wrong_predictions')
 
 
-    model = BetterCNN().to(device)
+    model = BetterCNN()
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
     model = train(
         model=model, 
