@@ -30,7 +30,7 @@ from sklearn.model_selection import train_test_split
 device = 'mps' if torch.backends.mps.is_available() else 'cpu'
 print(f"Using device: {device}")
 
-mod = 'nn_1d1d'
+mod = 'nn_2d1d'
 
 if mod == 'nn_1d1d':
     from run.run_nn_1d1d import run_nn_1d1d
@@ -57,16 +57,20 @@ if mod == 'nn_1d1d':
 #     yTest = torch.tensor(yTest, dtype=torch.float32)
 
 if mod == 'nn_2d1d':
+    from run.run_nn_2d1d import run_nn_2d1d
+    dataPath = {
+            'xTrain': './data/NN/x_train_2d1d.csv',
+            'yTrain': './data/NN/y_train_2d1d.csv',
+            'xTest': './data/NN/x_test_2d1d.csv',
+            'yTest': './data/NN/y_test_2d1d.csv'
+        }
+    epochs = 1000
+    criterion=torch.nn.MSELoss()
+    run_nn_2d1d(dataPath, epochs, criterion)
+    
+    
+    
 
-    xTrain2d = pd.read_csv('data/x_train_2d1d.csv', header=None).values
-    yTrain2d = pd.read_csv('data/y_train_2d1d.csv', header=None).values
-    xTest2d = pd.read_csv('data/x_test_2d1d.csv', header=None).values
-    yTest2d = pd.read_csv('data/y_test_2d1d.csv', header=None).values
-
-    xTrain2d = torch.tensor(xTrain2d, dtype=torch.float32)
-    yTrain2d = torch.tensor(yTrain2d, dtype=torch.float32)
-    xTest2d = torch.tensor(xTest2d, dtype=torch.float32)
-    yTest2d = torch.tensor(yTest2d, dtype=torch.float32)
 
 if mod == 'nn_ndnc':
     xTrainndnc = pd.read_csv('data/x_train_ndnc.csv', header=None).values
@@ -158,33 +162,33 @@ if mod == 'RNN':
 
 ## 2 dim
 
-if mod == 'nn_2d1d':
-    epochs = 5000
-    criterion=torch.nn.MSELoss()
+# if mod == 'nn_2d1d':
+#     epochs = 5000
+#     criterion=torch.nn.MSELoss()
 
-    model = NN_dim2(dim1=3)
-    optimizer=SGD(model.parameters(), lr=0.01)
-    modelTrained = train(model, xTrain2d, yTrain2d, optimizer, criterion, epochs)
-    loss = evaluate(model, xTest2d, yTest2d, criterion)
-    print(f"MSE for NN_dim2 model is {loss:.4f}")
+#     model = NN_dim2(dim1=3)
+#     optimizer=SGD(model.parameters(), lr=0.01)
+#     modelTrained = train(model, xTrain2d, yTrain2d, optimizer, criterion, epochs)
+#     loss = evaluate(model, xTest2d, yTest2d, criterion)
+#     print(f"MSE for NN_dim2 model is {loss:.4f}")
 
-    model = NN_dim2_layer2(dim1=2, dim2=5)
-    optimizer=SGD(model.parameters(), lr=0.01)
-    modelTrained = train(model, xTrain2d, yTrain2d, optimizer, criterion, epochs)
-    loss = evaluate(model, xTest2d, yTest2d, criterion)
-    print(f"MSE for NN_dim2_layer2 model is {loss:.4f}")
+#     model = NN_dim2_layer2(dim1=2, dim2=5)
+#     optimizer=SGD(model.parameters(), lr=0.01)
+#     modelTrained = train(model, xTrain2d, yTrain2d, optimizer, criterion, epochs)
+#     loss = evaluate(model, xTest2d, yTest2d, criterion)
+#     print(f"MSE for NN_dim2_layer2 model is {loss:.4f}")
 
-    model = NN_dim2_flixible_layer(dims=[5, 10, 3])
-    optimizer=SGD(model.parameters(), lr=0.01)
-    modelTrained = train(model, xTrain2d, yTrain2d, optimizer, criterion, epochs)
-    loss = evaluate(model, xTest2d, yTest2d, criterion)
-    print(f"MSE for NN_dim2_flixible_layer model is {loss:.4f}")
+#     model = NN_dim2_flixible_layer(dims=[5, 10, 3])
+#     optimizer=SGD(model.parameters(), lr=0.01)
+#     modelTrained = train(model, xTrain2d, yTrain2d, optimizer, criterion, epochs)
+#     loss = evaluate(model, xTest2d, yTest2d, criterion)
+#     print(f"MSE for NN_dim2_flixible_layer model is {loss:.4f}")
 
-    model = NN_dim2_flixible_layer_dropout(dims=[8, 10, 4], dropoutRate=0.5)
-    optimizer=SGD(model.parameters(), lr=0.01)
-    modelTrained = train(model, xTrain2d, yTrain2d, optimizer, criterion, epochs)
-    loss = evaluate(model, xTest2d, yTest2d, criterion)
-    print(f"MSE for NN_dim2_flixible_layer_dropout model is {loss:.4f}")
+#     model = NN_dim2_flixible_layer_dropout(dims=[8, 10, 4], dropoutRate=0.5)
+#     optimizer=SGD(model.parameters(), lr=0.01)
+#     modelTrained = train(model, xTrain2d, yTrain2d, optimizer, criterion, epochs)
+#     loss = evaluate(model, xTest2d, yTest2d, criterion)
+#     print(f"MSE for NN_dim2_flixible_layer_dropout model is {loss:.4f}")
 
 ## 3 dim 10 classes
 
