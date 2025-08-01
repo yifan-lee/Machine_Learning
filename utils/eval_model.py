@@ -10,7 +10,7 @@ def evaluate(model, x, y, criterion, device='mps'):
 
 
 
-def evaluate_CNN(model, x, y=None, criterion=None, device='mps',predFunction=None):
+def evaluate_flexible(model, x, y=None, criterion=None, device='mps',predFunction=None):
     dataLoader = _prepare_dataloader(x,y)
     model.to(device)
     model.eval()

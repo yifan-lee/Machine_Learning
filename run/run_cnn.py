@@ -8,7 +8,7 @@ from torchvision import datasets, transforms
 from model.CNN import CNN, BetterCNN
 
 from utils.train_model import train
-from utils.eval_model import evaluate, evaluate_CNN
+from utils.eval_model import evaluate_flexible
 from utils.load_data_from_csv import load_data_from_csv
 
 
@@ -65,7 +65,7 @@ def _train_and_eval_model(model, data, criterion, epochs,patience,device,predFun
         patience=patience, 
         device=device
     )
-    correctPercent, wrongIndexes = evaluate_CNN(
+    correctPercent, wrongIndexes = evaluate_flexible(
         model=modelTrained, 
         x=testCNNLoader, 
         y=None, 
