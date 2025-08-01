@@ -73,15 +73,26 @@ if mod == 'nn_2d1d':
 
 
 if mod == 'nn_ndnc':
-    xTrainndnc = pd.read_csv('data/x_train_ndnc.csv', header=None).values
-    yTrainndnc = pd.read_csv('data/y_train_ndnc.csv', header=None).values
-    xTestndnc = pd.read_csv('data/x_test_ndnc.csv', header=None).values
-    yTestndnc = pd.read_csv('data/y_test_ndnc.csv', header=None).values
+    from run.run_nn_ndnc import run_nn_ndnc
+    dataPath = {
+            'xTrain': './data/NN/x_train_ndnc.csv',
+            'yTrain': './data/NN/y_train_ndnc.csv',
+            'xTest': './data/NN/x_test_ndnc.csv',
+            'yTest': './data/NN/y_test_ndnc.csv'
+        }
+    epochs = 500
+    criterion=torch.nn.CrossEntropyLoss()
+    run_nn_ndnc(dataPath, epochs, criterion)
+    
+    # xTrainndnc = pd.read_csv('data/x_train_ndnc.csv', header=None).values
+    # yTrainndnc = pd.read_csv('data/y_train_ndnc.csv', header=None).values
+    # xTestndnc = pd.read_csv('data/x_test_ndnc.csv', header=None).values
+    # yTestndnc = pd.read_csv('data/y_test_ndnc.csv', header=None).values
 
-    xTrainndnc = torch.tensor(xTrainndnc, dtype=torch.float32)
-    yTrainndnc = torch.tensor(yTrainndnc, dtype=torch.int64).squeeze()
-    xTestndnc = torch.tensor(xTestndnc, dtype=torch.float32)
-    yTestndnc = torch.tensor(yTestndnc, dtype=torch.int64).squeeze()
+    # xTrainndnc = torch.tensor(xTrainndnc, dtype=torch.float32)
+    # yTrainndnc = torch.tensor(yTrainndnc, dtype=torch.int64).squeeze()
+    # xTestndnc = torch.tensor(xTestndnc, dtype=torch.float32)
+    # yTestndnc = torch.tensor(yTestndnc, dtype=torch.int64).squeeze()
 
 if mod == 'CNN':
     transform = transforms.Compose([transforms.ToTensor()])
@@ -192,27 +203,27 @@ if mod == 'RNN':
 
 ## 3 dim 10 classes
 
-if mod == 'nn_ndnc':
-    epochs = 500
-    criterion=torch.nn.CrossEntropyLoss()
+# if mod == 'nn_ndnc':
+#     epochs = 500
+#     criterion=torch.nn.CrossEntropyLoss()
 
-    model = nn_dim3c1(dims=[20,20,20])
-    optimizer=SGD(model.parameters(), lr=0.01)
-    modelTrained = train(model, xTrainndnc, yTrainndnc, optimizer, criterion, epochs)
-    loss = evaluate(model, xTestndnc, yTestndnc, criterion)
-    print(f"Cross entropy for nn_dim3c1 model is {loss:.4f}")
+#     model = nn_dim3c1(dims=[20,20,20])
+#     optimizer=SGD(model.parameters(), lr=0.01)
+#     modelTrained = train(model, xTrainndnc, yTrainndnc, optimizer, criterion, epochs)
+#     loss = evaluate(model, xTestndnc, yTestndnc, criterion)
+#     print(f"Cross entropy for nn_dim3c1 model is {loss:.4f}")
     
-    model = nn_dim3c1_dropout(dims=[32,16], dropoutRate=0.5)
-    optimizer=SGD(model.parameters(), lr=0.01)
-    modelTrained = train(model, xTrainndnc, yTrainndnc, optimizer, criterion, epochs)
-    loss = evaluate(model, xTestndnc, yTestndnc, criterion)
-    print(f"Cross entropy for nn_dim3c1_dropout model is {loss:.4f}")
+#     model = nn_dim3c1_dropout(dims=[32,16], dropoutRate=0.5)
+#     optimizer=SGD(model.parameters(), lr=0.01)
+#     modelTrained = train(model, xTrainndnc, yTrainndnc, optimizer, criterion, epochs)
+#     loss = evaluate(model, xTestndnc, yTestndnc, criterion)
+#     print(f"Cross entropy for nn_dim3c1_dropout model is {loss:.4f}")
     
-    model = nn_dim3c1_dropout_sequential(dims=[32,16], dropoutRate=0.5)
-    optimizer=SGD(model.parameters(), lr=0.01)
-    modelTrained = train(model, xTrainndnc, yTrainndnc, optimizer, criterion, epochs)
-    loss = evaluate(model, xTestndnc, yTestndnc, criterion)
-    print(f"Cross entropy for nn_dim3c1_dropout_sequential model is {loss:.4f}")
+#     model = nn_dim3c1_dropout_sequential(dims=[32,16], dropoutRate=0.5)
+#     optimizer=SGD(model.parameters(), lr=0.01)
+#     modelTrained = train(model, xTrainndnc, yTrainndnc, optimizer, criterion, epochs)
+#     loss = evaluate(model, xTestndnc, yTestndnc, criterion)
+#     print(f"Cross entropy for nn_dim3c1_dropout_sequential model is {loss:.4f}")
 
     # for dims in [[32,16], [64,32], [64,64,32]]:
     #     for dr in [0.1, 0.3, 0.5]:
