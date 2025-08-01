@@ -1,11 +1,30 @@
 import torch
+from torch.utils.data import DataLoader, TensorDataset
 
-def evaluate(model, x, y, criterion, device='mps'):
+def evaluate(model, x, y=None, criterion=None, device='mps'):
     x = x.to(device)
     y = y.to(device)
     model.to(device)
     yPred = model(x)
     loss = criterion(yPred, y)
+    return loss
+
+def evaluate2(model, x, y=None, criterion=None, device='mps',predFunction=None):
+    if y is None:
+        dataLoader = x
+    else:
+        dataLoader = DataLoader(
+            TensorDataset(x, y),
+            batch_size=32,
+            shuffle=True
+        )
+    loss = 0
+    for x, y in (dataLoader):
+        x = x.to(device)
+        y = y.to(device)
+        output = model(x)
+        pred = predFunction(output)
+        loss += criterion(pred, y)
     return loss
 
 

@@ -6,10 +6,10 @@ from torch.optim import SGD, Adam
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
-from model.RNN import BasicRNN
+from model.RNN import RNN_TS
 
 from utils.train_model import train
-from utils.eval_model import evaluate_flexible
+from utils.eval_model import evaluate2, evaluate_flexible
 from utils.word_to_index import tokenize
 from utils.DataSetForDataLoader import numericDataset
 
@@ -20,7 +20,9 @@ from sklearn.model_selection import train_test_split
 def run_rnn(path,featureName,seq_len,criterion, epochs,patience,device,predFunction,printLoss):
     data = _load_fincial_data(path,featureName,seq_len)
     
-    model = BasicRNN(featureDim=1, hiddenDim=128, outputDim=1)
+    xBatch, _ = next(iter(data['trainDataLoader']))
+    featureDim = xBatch.shape[2]
+    model = RNN_TS(featureDim=featureDim, hiddenDim=128, outputDim=featureDim)
     _train_and_eval_model(model, data, criterion, epochs,patience,device,predFunction,printLoss)
     
 
@@ -60,29 +62,6 @@ def _transfer_xy_to_DataLoader(x,y,xType=torch.float32, yType=torch.float32,test
     }
     return data
 
-
-# def run_rnn(path,criterion, epochs,patience,device,predFunction,printLoss,max_vocab = 5000,max_len = 100):
-#     data = _load_IMDB_data(path,max_vocab,max_len)
-    
-#     model = BasicRNN(featureDim=1, hiddenDim=128, outputDim=1)
-#     _train_and_eval_model(model, data, criterion, epochs,patience,device,predFunction,printLoss)
-    
-
-
-def _load_IMDB_data(dataPath,max_vocab,max_len):
-    df = pd.read_csv(dataPath)  # text,label
-    texts = df["text"].values
-    labels = df["label"].values
-
-    encodedTexts, word2idx = tokenize(texts, max_vocab, max_len)
-    encodedTextsArray = np.array(encodedTexts, dtype=np.float32)
-    encodedTexts3d = encodedTextsArray[:, :, None]
-    data = _transfer_xy_to_DataLoader(encodedTexts3d,labels)
-    return data
-    
-    
-
-
 def _train_and_eval_model(model, data, criterion, epochs,patience,device,predFunction,printLoss):
     trainCNNLoader = data['trainDataLoader']
     testCNNLoader = data['testDataLoader']
@@ -98,7 +77,7 @@ def _train_and_eval_model(model, data, criterion, epochs,patience,device,predFun
         device=device,
         printLoss = True,
     )
-    correctPercent, wrongIndexes = evaluate_flexible(
+    loss = evaluate2(
         model=modelTrained, 
         x=testCNNLoader, 
         y=None, 
@@ -106,5 +85,52 @@ def _train_and_eval_model(model, data, criterion, epochs,patience,device,predFun
         device=device,
         predFunction=predFunction
     )
-    print(f"Correct percent for {model.__class__.__name__} model is {correctPercent*100:.2f} %")
+    print(f"MSE for {model.__class__.__name__} model is {loss:.4f}")
     return modelTrained
+
+# def run_rnn(path,criterion, epochs,patience,device,predFunction,printLoss,max_vocab = 5000,max_len = 100):
+#     data = _load_IMDB_data(path,max_vocab,max_len)
+    
+#     model = BasicRNN(featureDim=1, hiddenDim=128, outputDim=1)
+#     _train_and_eval_model(model, data, criterion, epochs,patience,device,predFunction,printLoss)
+    
+
+
+# def _load_IMDB_data(dataPath,max_vocab,max_len):
+#     df = pd.read_csv(dataPath)  # text,label
+#     texts = df["text"].values
+#     labels = df["label"].values
+
+#     encodedTexts, word2idx = tokenize(texts, max_vocab, max_len)
+#     encodedTextsArray = np.array(encodedTexts, dtype=np.float32)
+#     encodedTexts3d = encodedTextsArray[:, :, None]
+#     data = _transfer_xy_to_DataLoader(encodedTexts3d,labels)
+#     return data
+    
+# def _train_and_eval_model(model, data, criterion, epochs,patience,device,predFunction,printLoss):
+#     trainCNNLoader = data['trainDataLoader']
+#     testCNNLoader = data['testDataLoader']
+#     optimizer = Adam(model.parameters(), lr=1e-3)
+#     modelTrained = train(
+#         model=model, 
+#         x=trainCNNLoader, 
+#         y=None, 
+#         optimizer=optimizer, 
+#         criterion=criterion, 
+#         epochs=epochs, 
+#         patience=patience, 
+#         device=device,
+#         printLoss = True,
+#     )
+#     correctPercent, wrongIndexes = evaluate_flexible(
+#         model=modelTrained, 
+#         x=testCNNLoader, 
+#         y=None, 
+#         criterion=criterion, 
+#         device=device,
+#         predFunction=predFunction
+#     )
+#     print(f"Correct percent for {model.__class__.__name__} model is {correctPercent*100:.2f} %")
+#     return modelTrained
+
+

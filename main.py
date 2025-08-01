@@ -12,7 +12,7 @@ from torch.utils.data import DataLoader
 from utils.train_model import train
 from utils.draw_figure import prepare_data_for_draw_CNN_incorrect_predictions, draw_CNN_incorrect_predictions
 from utils.word_to_index import tokenize
-from utils.DataSetForDataLoader import TextDataset
+from utils.DataSetForDataLoader import numericDataset
 
 
 from sklearn.model_selection import train_test_split
@@ -78,15 +78,20 @@ if mod == 'CNN':
 
 if mod == 'RNN':
     from run.run_rnn import run_rnn
-    dataPath = "./data/RNN/IMDB/imdb_train.csv"
-    epochs = 10
+    
+    dataPath = r'./data/RNN/financial_timeseries.csv'
+    featureName = ['Close', 'Open']
+    seq_len = 64
+    criterion = nn.MSELoss()
+    epochs=5
     patience = 1
-    criterion = nn.BCEWithLogitsLoss()
-    def predict_RNN_result(output):
-        return (torch.sigmoid(output) > 0.5).float()
-    predFunction = predict_RNN_result
+    def predict_RNN_TS_result(output):
+        return output
+    predFunction = predict_RNN_TS_result
     run_rnn(
         path = dataPath,
+        featureName = featureName,
+        seq_len = seq_len,
         criterion = criterion, 
         epochs=epochs,
         patience = patience,
@@ -94,6 +99,23 @@ if mod == 'RNN':
         predFunction=predFunction,
         printLoss = True
     )
+    
+    # dataPath = "./data/RNN/IMDB/imdb_train.csv"
+    # epochs = 10
+    # patience = 1
+    # criterion = nn.BCEWithLogitsLoss()
+    # def predict_RNN_result(output):
+    #     return (torch.sigmoid(output) > 0.5).float()
+    # predFunction = predict_RNN_result
+    # run_rnn(
+    #     path = dataPath,
+    #     criterion = criterion, 
+    #     epochs=epochs,
+    #     patience = patience,
+    #     device=device,
+    #     predFunction=predFunction,
+    #     printLoss = True
+    # )
 
 ## 1 dim
 
