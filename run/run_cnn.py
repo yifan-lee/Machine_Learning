@@ -9,7 +9,6 @@ from model.CNN import CNN, BetterCNN
 
 from utils.train_model import train
 from utils.eval_model import evaluate_flexible
-from utils.load_data_from_csv import load_data_from_csv
 
 
 def run_cnn(path,criterion, epochs,patience,device,predFunction):
@@ -41,19 +40,19 @@ def _load_data(path):
     trainDataset.targets -= 1
     testDataset.targets -= 1
     batchSize = 32
-    trainCNNLoader = DataLoader(trainDataset, batch_size=batchSize, shuffle=True)
-    testCNNLoader = DataLoader(testDataset, batch_size=batchSize, shuffle=False)
+    trainDataLoader = DataLoader(trainDataset, batch_size=batchSize, shuffle=True)
+    testDataLoader = DataLoader(testDataset, batch_size=batchSize, shuffle=False)
     data = {
-        'trainCNNLoader': trainCNNLoader,
-        'testCNNLoader': testCNNLoader
+        'trainDataLoader': trainDataLoader,
+        'testDataLoader': testDataLoader
     }
     return data
 
 
 
 def _train_and_eval_model(model, data, criterion, epochs,patience,device,predFunction):
-    trainCNNLoader = data['trainCNNLoader']
-    testCNNLoader = data['testCNNLoader']
+    trainCNNLoader = data['trainDataLoader']
+    testCNNLoader = data['testDataLoader']
     optimizer = Adam(model.parameters(), lr=1e-3)
     modelTrained = train(
         model=model, 
