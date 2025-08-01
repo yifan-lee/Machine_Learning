@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import Dataset
 
 
-class TextDataset(Dataset):
+class numericDataset(Dataset):
     def __init__(self, X, y, Xclass, Yclass):
         self.X = torch.tensor(X, dtype=Xclass)
         self.y = torch.tensor(y, dtype=Yclass)
