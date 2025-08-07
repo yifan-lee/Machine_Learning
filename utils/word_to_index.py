@@ -23,3 +23,6 @@ def tokenize(texts, vocab_size=5000, max_len=100):
         ids = ids[:max_len] + [0] * (max_len - len(ids))
         encoded.append(ids)
     return encoded, word2idx
+
+
+
